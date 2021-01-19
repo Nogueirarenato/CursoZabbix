@@ -1,0 +1,106 @@
+// Aula 4 - Instalação via pacotes no CentOS
+
+
+Nessa aula, vamos usar o CentOS na instalção via pacotes com o Zabbix 4.x LTS. Nosso ambiente está assim:
+
+➔ VM no Oracle VirtualBox 5.x
+➔ Zabbix 3.x
+➔ Sistema CentOS 7.x
+➔ 2 CPU
+➔ 1,5 GB RAM
+
+
+Atualize o seu sistema:
+
+# yum update
+
+
+Desabilite o SELinux, editando o arquivo /etc/selinux/config:
+
+# vim /etc/selinux/config
+
+SELINUX=disabled
+
+Para as configurações terem efeito sem a necessidade de reiniciar o servidor, execute o seguinte comando:
+
+# setenforce 0
+
+Agora, vamos desativar o firewall:
+
+
+# systemctl stop firewalld ; systemctl disable firewalld
+
+Agora, vamos instalar as nossas dependências necessárias:
+
+# yum -y install wget vim
+
+# wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+# rpm -ivh epel-release-latest-7.noarch.rpm
+
+# rpm -i https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
+
+# yum install zabbix-server-mysql zabbix-web-mysql zabbix-agent 
+
+# rpm -ivh http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+
+# yum install mysql-community-server
+
+# service mysqld start
+
+# mysql -uroot -p
+
+(sem senha)!
+
+mysql> create database zabbix character set utf8 collate utf8_bin;
+
+mysql> grant all privileges on zabbix.* to zabbix@localhost identified by 'zabbix';
+
+mysql> quit;
+
+Agora precisamos configurar a base de dados do Zabbix no MySQL e importar os schemas em nosso BD:
+
+# zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix 
+
+Vamos ativar os serviços do Zabbix no CentOS 
+
+Agora editamos o arquivo de configuração
+
+# vim /etc/zabbix/zabbix_server.conf
+
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=zabbix
+
+Já instalamos a base de dados e do servidor Zabbix. O próximo passo é configurar e instalar a interface web.
+
+# vim /etc/httpd/conf.d/zabbix.conf
+
+php_value date.timezone America/Sao_Paulo
+
+Agora, vamos dar um restart em todos os serviços:
+
+# systemctl restart zabbix-server zabbix-agent httpd
+
+# systemctl enable zabbix-server zabbix-agent httpd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

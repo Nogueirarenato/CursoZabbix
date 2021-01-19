@@ -1,0 +1,5 @@
+Name UbuntuServer
+server name ubuntuserver
+username zabbix
+password zabbix
+	

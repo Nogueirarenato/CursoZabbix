@@ -1,0 +1,21 @@
+// Aula 6 - Script de Instalação Fácil em Sistemas Debian 9
+
+Nessa aula, vamos usar o Debian 9.x para fazer a instalação
+do Zabbix Server. A nossa configuração é a seguinte:
+
+➔ Debian 9.x
+➔ Zabbix 4.x
+➔ Banco de dados MySQL 8.X
+➔ Script de instalação fácil com apenas um comando
+
+Vamos baixar o nosso arquivo de instalação chamado de install.sh e rodar com esse comando:
+
+# wget https://raw.githubusercontent.com/Mazuco/Zabbix/master/installdebian9%20zb4.sh ; bash ins*
+
+Com esse script, ele vai fazer TODA a instalação do seu Zabbix Server, Agent, e todas as outras configurações de modo fácil e descomplicado. Depois de instalar é só nevegar no IP de sua máquina e entrar no diretório do Zabbix para acessar o seu sistema.
+
+
+
+
+
+

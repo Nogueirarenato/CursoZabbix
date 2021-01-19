@@ -1,0 +1,62 @@
+// Aula 1 - Instalação do Zabbix - Apresentação
+
+Para podermos instalar o Zabbix, temos diversas maneiras
+diferentes, uma é pelo modo de pacotes ou pelo Código-
+fonte do Zabbix.
+
+Vamos ao site onde ficam armazenados todas as versões do Zabbix:
+
+http://repo.zabbix.com/zabbix/
+
+E também, como dever de ser um administrador, temos que olhar os bugs, correções e issues da versão que você vai instalar! 
+
+
+https://www.zabbix.com/release_notes
+
+
+Podemos resumir a instalação do Zabbix em 3 módulos, uma
+é o Banco de Dados, a outra é o Servidor que vai rodar o
+Zabbix, e a outra é a interface Web que o usuário irá usar.
+
+Se for por "Pacotes":
+
+Pós:
+➔ Instalação mais rápida
+➔ Instalação all-in-one
+➔ Dependências dos pacotes são instalados automaticamente
+➔ Indicado para iniciantes
+➔ Configuração mais fácil
+➔ Mais fácil a atualização do ambiente.
+
+Contra:
+➔ Mais complexo para para instalar em 2 ou 3 camadas
+➔ Não indicado para monitoramento de grande porte
+
+Se for por "Source":
+
+Pós:
+➔ Escolha de features
+➔ Instalação em camadas é de modo facilitada
+➔ Mais indicado para monitoração de grandes ambientes
+
+
+Contra:
+➔ Resolução de dependências Manualmente
+➔ Planeja a atualização 
+➔ Mais complicado para iniciantes
+➔ Configuração mais complexa e demorada
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

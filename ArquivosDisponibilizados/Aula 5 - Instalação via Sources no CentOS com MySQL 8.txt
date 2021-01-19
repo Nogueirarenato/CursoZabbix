@@ -1,0 +1,179 @@
+// Aula 5 - Instalação via Sources no CentOS com MySQL 8
+
+Nessa aula, vamos usar o CentOS na instalção via sources
+com o Zabbix 3 LTS. Nosso ambiente está assim:
+
+➔ VM no Oracle VirtualBox 5.x
+➔ Zabbix 4.x
+➔ Sistema Centos 7.x
+➔ 2 CPU
+➔ 1,5 GB RAM
+
+# yum update
+
+Desabilite o SELinux, editando o arquivo /etc/selinux/config:
+
+# vim /etc/selinux/config
+
+SELINUX=disabled
+
+Para as configurações terem efeito sem a necessidade de
+reiniciar o servidor, execute o seguinte comando:
+
+# setenforce 0
+
+Agora, vamos desativar o firewall:
+
+# systemctl stop firewalld
+# systemctl disable firewalld
+
+Agora, vamos instalar as nossas dependências necessárias:
+
+yum localinstall https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+
+yum install mysql-community-server
+
+systemctl start mysqld.service
+
+systemctl enable mysqld.service
+
+Agora, vamos criar a nossa base de dados no MySQL
+
+$ sudo grep 'temporary password' /var/log/mysqld.log
+
+$ mysql -uroot -p
+
+set password for 'root'@'localhost' = 'Mudar@123';
+
+mysql> create database zabbix character set utf8 collate
+utf8_bin;
+
+mysql> create user "zabbix"@"localhost" identified by "Mudar@123";
+
+mysql> ALTER USER "zabbix"@"localhost" IDENTIFIED WITH mysql_native_password BY "Mudar@123";
+
+mysql> grant all on zabbix.* to "zabbix"@"localhost";
+
+mysql> flush privileges;
+
+mysql> exit;
+
+Agora, vamos instalar todas as nossas dependências:
+
+# yum install php-mysql php-bcmath php-gd php-fpm php-xml php-ldap php-mbstring wget libcurl-devel openldap-devel java-1.7.0-openjdk-devel net-snmp-devel iksemel-devel libxml2-devel mysql-devel httpd vim unixODBC-devel net-snmp libssh2-devel OpenIPMI-devel openldap-devel libcurl-devel gnutls-devel net-snmp-perl net-snmp-utils libevent-devel -y
+
+Agora, vamos instalar todas as dependências do php:
+
+# yum install php php-cli php-common php-dba php-devel php-gd php-mysql phppear php-process php-snmp php-xmlrpc php-xml rrdtool-php php-gd php-bcmath php-mbstring php-mcrypt php-mhash php-ncurses -y
+
+Agora, vamos instalar o compilador C:
+
+yum groupinstall "Development Tools"
+
+Vamos instalar via source e depois compilar o Zabbix em
+nossa Centos:
+
+# cd /usr/src
+
+# VERSAO=4.0.0
+
+# export VERSAO
+
+# wget http://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/$VERSAO/zabbix-$VERSAO.tar.gz
+
+# tar xzfv zabbix-*
+ 
+# cd zabbix-$VERSAO/
+
+# ./configure --enable-server --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2 --with-openipmi --with-openssl --prefix=/usr/local
+
+# make install
+
+# groupadd zabbix
+
+# useradd -r -g zabbix zabbix
+
+# cd /usr/src/zabbix-$VERSAO/database/mysql/
+
+# mysql -u zabbix -p zabbix < schema.sql
+# mysql -u zabbix -p zabbix < images.sql
+# mysql -u zabbix -p zabbix < data.sql
+
+senha: Mudar@123
+
+Agora editamos o arquivo de configuração:
+
+# vim /usr/local/etc/zabbix_server.conf
+
+DBHost=localhost
+DBName=zabbix
+DBUser=zabbix
+DBPassword=Mudar@123
+
+Configurar o front do Zabbix em php.ini:
+
+# vim /etc/php.ini
+
+date.timezone = America/Sao_Paulo
+memory_limit = 512M
+post_max_size = 60M
+upload_max_filesize = 32M
+max_execution_time = 600
+max_input_time = 600
+
+Criar o diretório zabbix em /var/www/html/zabbix, para guardar as fronts-ends do Zabbix. 
+
+Copie-os para o local criado e dê as permissões para o usuário apache ter acesso para alteração e gravação no diretório:
+
+# mkdir /var/www/html/zabbix
+
+# cp -R /usr/src/zabbix*/frontends/php/* /var/www/html/zabbix/
+# chown -R apache:apache /var/www/html/zabbix/
+
+Agora, copie os iniciáveis do zabbix_agentd e zabbix_server para o /etc/init.d/, com as permissões de execução do script:
+
+# cd /usr/src/zabbix*/misc/init.d/fedora/core/
+# cp zabbix_agentd /etc/init.d
+# cp zabbix_server /etc/init.d
+# chmod +x /etc/init.d/zabbix_server /etc/init.d/zabbix_agentd
+
+Habilite o serviço do Apache:
+
+# systemctl enable httpd
+# systemctl start httpd
+
+Inicie os serviços do Zabbix:
+
+# /etc/init.d/zabbix_server start
+# /etc/init.d/zabbix_agentd start
+
+Vamos colocar essses script em nosso crontab para que
+assim o Zabbix inicie junto ao CentOS:
+
+# crontab -e
+
+@reboot /etc/init.d/zabbix_server start ; /etc/init.d/zabbix_agentd start
+
+Depois inicie o serviço:
+
+# systemctl restart crond.service
+# systemctl enable crond.service
+
+Acessar interface Web:
+
+http://<IP_do_host>/zabbix
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
