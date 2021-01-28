@@ -1,0 +1,55 @@
+senhas do debian: zabbix
+
+
+
+*******Comandos do vim**********
+
+ir para a primeira linha shift + : + 1 + enter
+ir para o final do arquivo shift + g
+modo inserção pressiona i
+pressiona shift : q!
+pressiona shift : q para sair
+pressiona shift :wq para sair e gravar
+excluir a linha toda dd
+u = ctrl +z do windows
+shift + z + q saí sem gravar
+shift + z + z saí gravando
+/ serve para pesquisar
+
+
+********Comandos do nano********
+
+ctrl + w pesquisa
+
+
+
+*******Após a instalação do Debian***********
+Instalar:
+vim
+
+Editar o repositório:
+
+
+~# vi /etc/apt/sources.list
+
+
+
+*******Após a instalação do CentOS**********
+
+~# yum install vim
+~# vim /etc/yum.repos.d/CentOS
+
+
+
+
+********FORMAS DE INSTALAÇÃO DO ZABBIX************
+
+via pacotes ou código fonte
+repositório oficial do zabbix
+http://repo.zabbix.com
+
+
+via codigo fonte
+
+http://www.zabbix.com/download.php
+
